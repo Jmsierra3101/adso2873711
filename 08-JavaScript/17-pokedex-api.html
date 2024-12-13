@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Pokédex</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .pokemon-card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(230,230,230,0.4) 100%);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .pokemon-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .pokemon-number {
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 12px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body class="bg-blue-500">
+  
+  <div id="welcome" class="fixed inset-0 bg-gradient-to-br from-blue-100 to-blue-500 z-50 flex items-center justify-center">
+    <div class="text-center">
+        <img src="./images/logoPokemon.png" alt="Pokédex Logo" 
+             class="mx-auto w-64 animate-pulse">
+        <button id="enterPokedex" 
+                class="bg-yellow-400 text-black px-12 py-4 rounded-full text-2xl font-bold 
+                       hover:bg-yellow-500 hover:shadow-xl transform hover:scale-110 transition-all">
+            GO!
+        </button>
+    </div>
+  </div>
+
+  <div id="app" class="container mx-auto px-4 py-8 hidden">
+    <header class="text-center mb-8">
+      <img src="./images/logoPokemon.png"  
+      class="mx-auto w-52">
+      <div class="flex justify-center mt-4">
+        <input type="text" id="searchInput" placeholder="Search Pokémon" class="px-4 py-2 border rounded-l-lg w-64">
+        <button id="searchButton" class="bg-red-600 text-white px-4 py-2 rounded-r-lg hover:bg-red-800">
+          Search
+        </button>
+      </div>
+    </header>
+
+    <div id="pokemonGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+    </div>
+
+    <div id="pokemonModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center">
+      <div class="bg-white rounded-lg p-8 max-w-md w-full relative">
+        <button id="closeModal" class="absolute top-4 left-4 text-gray-600 hover:text-gray-900 flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          
+        </button>
+        <div id="modalContent" class="text-center">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('enterPokedex').addEventListener('click', () => {
+      document.getElementById('welcome').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+    });
+
+    class PokeDex {
+      constructor() {
+        this.pokemons = [];
+        this.pokemonGrid = document.getElementById('pokemonGrid');
+        this.searchInput = document.getElementById('searchInput');
+        this.searchButton = document.getElementById('searchButton');
+        this.pokemonModal = document.getElementById('pokemonModal');
+        this.modalContent = document.getElementById('modalContent');
+        this.closeModalBtn = document.getElementById('closeModal');
+
+        this.initEventListeners();
+        this.fetchPokemons();
+      }
+
+      initEventListeners() {
+        this.searchButton.addEventListener('click', () => this.searchPokemon());
+        this.searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') this.searchPokemon();
+        });
+        this.closeModalBtn.addEventListener('click', () => this.closeModal());
+      }
+
+      async fetchPokemons() {
+        try {
+          const promises = Array.from({ length: 151 }, (_, i) =>
+            fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`).then(res => res.json())
+          );
+          this.pokemons = await Promise.all(promises);
+          this.renderPokemonGrid(this.pokemons);
+        } catch (error) {
+          console.error('Failed to fetch Pokémon:', error);
+        }
+      }
+
+      renderPokemonGrid(pokemonList) {
+        this.pokemonGrid.innerHTML = pokemonList.map(pokemon => `
+          <div 
+            class="pokemon-card rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition" 
+            data-id="${pokemon.id}"
+          >
+            <h3 class="text-center capitalize font-semibold mb-2">
+              ${pokemon.name}
+            </h3>
+            <img 
+              src="${pokemon.sprites.front_default}" 
+              alt="${pokemon.name}" 
+              class="mx-auto h-32 w-32"
+            >
+            <p class="text-right">
+              <span class="pokemon-number">#${pokemon.id}</span>
+            </p>
+          </div>
+        `).join('');
+
+        this.pokemonGrid.addEventListener('click', (e) => {
+          const pokemonCard = e.target.closest('.pokemon-card');
+          if (pokemonCard) {
+            const pokemonId = parseInt(pokemonCard.dataset.id);
+            const pokemon = this.pokemons.find(p => p.id === pokemonId);
+            this.showPokemonDetails(pokemon);
+          }
+        });
+      }
+
+      showPokemonDetails(pokemon) {
+        if (!pokemon) return;
+
+        const stats = pokemon.stats.reduce((acc, stat) => {
+          acc[stat.stat.name] = stat.base_stat;
+          return acc;
+        }, {});
+
+        // Calculate total stats
+        const totalStats = Object.values(stats).reduce((sum, stat) => sum + stat, 0);
+
+        this.modalContent.innerHTML = `
+          <div class="relative">
+            <span class="absolute top-0 right-0 pokemon-number">#${pokemon.id}</span>
+            <img 
+              src="${pokemon.sprites.front_default}" 
+              alt="${pokemon.name}" 
+              class="mx-auto h-48 w-48"
+            >
+          </div>
+          <h2 class="text-2xl font-bold capitalize mt-4">${pokemon.name}</h2>
+          
+          <div class="space-y-2">
+            <div>
+              <div class="flex justify-between">
+                <span>HP</span>
+                <span>${stats.hp}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  class="bg-green-500 h-2.5 rounded-full" 
+                  style="width: ${(stats.hp / 255) * 100}%"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <span>Attack</span>
+                <span>${stats.attack}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  class="bg-red-500 h-2.5 rounded-full" 
+                  style="width: ${(stats.attack / 255) * 100}%"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <span>Defense</span>
+                <span>${stats.defense}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  class="bg-blue-500 h-2.5 rounded-full" 
+                  style="width: ${(stats.defense / 255) * 100}%"
+                ></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between">
+                <span>Speed</span>
+                <span>${stats.speed}</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div 
+                  class="bg-purple-500 h-2.5 rounded-full" 
+                  style="width: ${(stats.speed / 255) * 100}%"
+                ></div>
+              </div>
+            </div>
+            <div class="mt-4 bg-gray-100 p-2 rounded">
+              <div class="flex justify-between font-bold">
+                <span>Total Stats</span>
+                <span>${totalStats}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        this.pokemonModal.classList.remove('hidden');
+      }
+
+      closeModal() {
+        this.pokemonModal.classList.add('hidden');
+      }
+
+      searchPokemon() {
+        const searchTerm = this.searchInput.value.toLowerCase().trim();
+
+        if (!searchTerm) {
+          this.renderPokemonGrid(this.pokemons);
+          return;
+        }
+
+        const filteredPokemon = this.pokemons.filter(pokemon =>
+          pokemon.name.toLowerCase().includes(searchTerm) ||
+          pokemon.id.toString() === searchTerm
+        );
+
+        this.renderPokemonGrid(filteredPokemon);
+      }
+    }
+
+    // Initialize the Pokédex when the page loads
+    document.addEventListener('DOMContentLoaded', () => new PokeDex());
+  </script>
+</body>
+
+</html>
