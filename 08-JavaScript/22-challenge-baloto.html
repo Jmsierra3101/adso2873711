@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="master.css">
+    <title>Ballotto</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            
+        }
+        .contenedor-app {
+            width: 300px;
+            height: 450px;
+            background: linear-gradient(135deg, #000000, #ff6e6e);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .encabezado {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 1px;
+        }
+        .contenedor-bolas-amarillas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            width: 260px;
+        }
+        .contenedor-bola-roja {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .bola {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .bola-amarilla {
+            background: linear-gradient(135deg, #ffcc33, #ffa500);
+            color: #333;
+        }
+        .bola-roja {
+            background: linear-gradient(135deg, #ff6b6b, #ff0000);
+            color: white;
+        }
+        .boton-jugar {
+            margin-top: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            color: white;
+            border: none;
+            padding: 10px 40px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .boton-jugar:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        .icono-jugar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-app">
+        <div class="encabezado">
+            <div class="logo">Ballotto<span class="logo-punto">•</span></div>
+        </div>
+        <div class="contenedor-bolas-amarillas">
+            <div class="bola bola-amarilla"></div>
+            <div class="bola bola-amarilla"></div>
+            <div class="bola bola-amarilla"></div>
+            <div class="bola bola-amarilla"></div>
+            <div class="bola bola-amarilla"></div>
+        </div>
+        <div class="contenedor-bola-roja">
+            <div class="bola bola-roja">7</div>
+        </div>
+        <button class="boton-jugar">
+            <div class="icono-jugar"></div>
+            Jugar
+        </button>
+    </div>
+    <script>
+        const botonJugar = document.querySelector('.boton-jugar');
+        const bolasAmarillas = document.querySelectorAll('.bola-amarilla');
+        const bolaRoja = document.querySelector('.bola-roja');
+        
+        botonJugar.addEventListener('click', function() {
+            // Generar números para las bolas amarillas (1-100)
+            bolasAmarillas.forEach((bola) => {
+                let numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+                bola.textContent = numeroAleatorio;
+            });
+            
+            // Generar número para la bola roja (1-10)
+            let numeroRojo = Math.floor(Math.random() * 10) + 1;
+            bolaRoja.textContent = numeroRojo;
+        });
+        
+        // Generar números aleatorios al cargar la página
+        window.onload = function() {
+            // Generar números para las bolas amarillas (1-100)
+            bolasAmarillas.forEach((bola) => {
+                bola.textContent = Math.floor(Math.random() * 100) + 1;
+            });
+            
+            // Generar número para la bola roja (1-10)
+            bolaRoja.textContent = Math.floor(Math.random() * 10) + 1;
+        };
+    </script>
+</body>
+</html>
