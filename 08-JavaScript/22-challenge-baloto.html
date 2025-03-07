@@ -126,12 +126,12 @@
         botonJugar.addEventListener('click', function() {
             // Generar números para las bolas amarillas (1-100)
             bolasAmarillas.forEach((bola) => {
-                let numeroAleatorio = Math.floor(Math.random() * 100) + 1;
+                let numeroAleatorio = Math.floor(Math.random() * 46) + 1;
                 bola.textContent = numeroAleatorio;
             });
             
             // Generar número para la bola roja (1-10)
-            let numeroRojo = Math.floor(Math.random() * 10) + 1;
+            let numeroRojo = Math.floor(Math.random() * 16) + 1;
             bolaRoja.textContent = numeroRojo;
         });
         
@@ -139,11 +139,11 @@
         window.onload = function() {
             // Generar números para las bolas amarillas (1-100)
             bolasAmarillas.forEach((bola) => {
-                bola.textContent = Math.floor(Math.random() * 100) + 1;
+                bola.textContent = Math.floor(Math.random() * 46) + 1;
             });
             
             // Generar número para la bola roja (1-10)
-            bolaRoja.textContent = Math.floor(Math.random() * 10) + 1;
+            bolaRoja.textContent = Math.floor(Math.random() * 16) + 1;
         };
     </script>
 </body>
