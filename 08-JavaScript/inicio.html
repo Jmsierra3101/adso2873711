@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+    <style>
+        body {
+    background-image: url(./images/fondo.png); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menu-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    margin-top: 140px;
+}
+.menu-image {
+    max-width: 1500px;
+    height: auto;
+}
+.title2-image {
+    position: absolute;
+    max-width: 700px;
+    height: auto;
+    top: 25%;
+    transform: translate(0%, -50%);
+}
+.seleccionar-image, .seleccionar-image-2 {
+    position: absolute;
+    cursor: pointer;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.seleccionar-image:hover, .seleccionar-image-2:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.85;
+}
+.seleccionar-image {
+    max-width: 900px;
+    height: auto;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.seleccionar-image-2 {
+    max-width: 400px;
+    height: auto;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+    </style>
+</head>
+<body>
+    <section class="menu-section">
+        <img src="images/menu.png" alt="Menú del Juego" class="menu-image">
+        <img src="images/titulo2.png" alt="Título Secundario" class="title2-image">
+        <div class="seleccionar-container">
+            <a href="26-events-time.html">
+                <img src="images/start.png" alt="Seleccionar" class="seleccionar-image">
+            </a>
+        </div>
+        <img src="images/salir.png" alt="Seleccionar 2" class="seleccionar-image-2">
+    </section>
+</body>
+</html>
