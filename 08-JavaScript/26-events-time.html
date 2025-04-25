@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mapa del Tesoro</title>
+  <style>
+    body {
+    background-image: url(./images/fondo.png); 
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.menu-section {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+    margin-top: 140px;
+}
+.menu-image {
+    max-width: 1500px;
+    height: auto;
+}
+.title2-image {
+    position: absolute;
+    max-width: 350px;
+    height: auto;
+    top: 20%;
+    transform: translate(0%, -50%);
+}
+.treasuremap-image {
+    position: absolute;
+    max-width: 700px;
+    height: auto;
+    top: 57%;
+    transform: translate(0%, -50%);
+}
+img {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.back-button-container {
+  position: absolute;
+  top: -15%;
+  left: 10px;
+}
+
+.back-button {
+  display: inline-block;
+  width: 50px; 
+  height: 50px;
+  background-image: url(./images/menu.png); 
+  border: none;
+  border-radius: 50%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.back-button img {
+  width: 40px; 
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  pointer-events: none; 
+  position: relative;
+  top: 5px; 
+}
+
+.back-button:hover {
+  background-color: #ffffff;
+  transform: scale(1.1); 
+}
+
+#distance {
+  position: absolute;
+  margin-top: 600px; /* Espacio entre el mapa y el texto */
+  color: rgb(255, 255, 255); /* Cambia el color del texto a blanco */
+  font-size: 1.5rem; /* Ajusta el tamaño del texto */
+  text-align: center; /* Centra el texto */
+  font-family: 'Arial', sans-serif; /* Cambia la fuente */
+  font-weight: bold; /* Hace el texto más grueso */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Añade un efecto de sombra */
+  animation: fadeIn 1s ease-in-out, pulse 1.5s infinite; /* Aplica animaciones */
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación de pulso */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Estilos para la sección de felicitaciones */
+.congratulations {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('ruta/de/la/imagen/del/tesoro.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.congratulations::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.congratulations-content {
+  position: relative; 
+  background-color: rgba(248, 214, 78, 0.9);
+  border-radius: 15px;
+  padding: 40px;
+  text-align: center;
+  max-width: 80%;
+  animation: popup 0.5s ease-out, glow 2s infinite alternate;
+}
+
+.congratulations h2 {
+  color: #8b0000;
+  font-size: 3rem;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.congratulations p {
+  color: #5c3c00;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  font-family: 'Arial', sans-serif;
+}
+
+.play-again-btn {
+  background-color: #8b0000;
+  color: white;
+  font-size: 1.2rem;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.play-again-btn:hover {
+  background-color: #b30000;
+  transform: scale(1.1);
+}
+
+.treasure-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite alternate;
+}
+
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f44336;
+  border-radius: 50%;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-100vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+  </style>
+</head>
+<body>
+  <section class="menu-section">
+    <img src="images/menu.png" alt="Menú del Juego" class="menu-image">
+    <img src="images/titulo2.png" alt="Título Secundario" class="title2-image">
+    <img src="images/treasuremap.png" alt="Mapa Tesoro" class="treasuremap-image" id="treasuremap">
+    
+    <p id="distance"></p>
+
+    <div class="back-button-container">
+      <a href="inicio.html" class="back-button"><img src="images/flecha.png" alt=""></a>
+    </div>
+  </section>
+
+
+  <div class="congratulations" id="congratulations">
+    <div class="congratulations-content">
+      <div class="treasure-icon">🏆</div>
+      <h2>¡FELICIDADES!</h2>
+      <p>¡Has encontrado el tesoro en <span id="clicks-count"></span> clics!</p>
+      <button class="play-again-btn" id="play-again">¡Jugar de nuevo!</button>
+    </div>
+  </div>
+
+  <script>
+    const WIDTH = 400;
+    const HEIGHT = 400;
+    
+    function getRandomNumber(size) {
+      return Math.floor(Math.random() * size);
+    }
+    
+    function getDistance(e, target) {
+      let diffX = e.offsetX - target.x;
+      let diffY = e.offsetY - target.y;
+      return Math.sqrt((diffX * diffX) + (diffY * diffY));
+    }
+    
+    // Devuelve una pista según la distancia
+    function getDistanceHint(distance) {
+      if (distance < 30) {
+        return "¡Hirviendo!";
+      } else if (distance < 40) {
+        return "Muy Caliente";
+      } else if (distance < 60) {
+        return "Caliente";
+      } else if (distance < 100) {
+        return "Tibio";
+      } else if (distance < 180) {
+        return "Frío";
+      } else if (distance < 360) {
+        return "Muy Frío";
+      } else {
+        return "¡Congelado!";
+      }
+    }
+    
+    // Función para mostrar la pantalla de felicitaciones
+    function showCongratulations(clickCount) {
+      const congratsSection = document.getElementById('congratulations');
+      const clicksCountSpan = document.getElementById('clicks-count');
+      
+      // Actualiza el contador de clics
+      clicksCountSpan.textContent = clickCount;
+      
+      // Muestra la sección de felicitaciones
+      congratsSection.style.display = 'flex';
+      
+    
+      createConfetti();
+    }
+    
+    // Función para crear confeti
+    function createConfetti() {
+      const confettiCount = 100;
+      const container = document.querySelector('.congratulations');
+      
+      for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        
+       
+        confetti.style.left = Math.random() * 100 + 'vw';
+        
+       
+        const size = Math.floor(Math.random() * 10) + 5;
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+        
+        
+        const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        
+        confetti.style.animationDelay = Math.random() * 3 + 's';
+        
+        
+        confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+        
+        container.appendChild(confetti);
+      }
+    }
+    
+    // Coordenadas del tesoro (posición aleatoria)
+    let target = {
+      x: getRandomNumber(WIDTH),
+      y: getRandomNumber(HEIGHT)
+    };
+    
+    // Elementos del DOM
+    let $map = document.querySelector('#treasuremap');
+    let $distance = document.querySelector('#distance');
+    let clicks = 0;
+    
+    // Manejador de eventos para clics en el mapa
+    $map.addEventListener('click', function(e) {
+      clicks++;
+      
+      let distance = getDistance(e, target);
+      let distanceHint = getDistanceHint(distance);
+      
+      $distance.innerHTML = `<h1>${distanceHint}</h1>`;
+      
+      // Si la distancia es menor a 20, el jugador ha ganado
+      if (distance < 20) {
+        showCongratulations(clicks);
+      }
+    });
+    
+    // Manejador para el botón "Jugar de nuevo"
+    document.getElementById('play-again').addEventListener('click', function() {
+      // Oculta la pantalla de felicitaciones
+      document.getElementById('congratulations').style.display = 'none';
+      
+      // Elimina todo el confeti
+      const confettiElements = document.querySelectorAll('.confetti');
+      confettiElements.forEach(element => element.remove());
+      
+      // Reinicia el juego
+      clicks = 0;
+      target = {
+        x: getRandomNumber(WIDTH),
+        y: getRandomNumber(HEIGHT)
+      };
+      
+      // Limpia el mensaje de distancia
+      $distance.innerHTML = '';
+    });
+  </script>
+</body>
+</html>
